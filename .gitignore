@@ -1,0 +1,14 @@
+__pycache__
+*.pyc
+
+.vscode
+.venv
+.DS_STORE
+.pytest_cache
+
+# Pycharm
+.idea*
+.idea/*
+
+# vim
+*.swp

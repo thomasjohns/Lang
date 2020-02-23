@@ -1,0 +1,14 @@
+program         → stmt* EOF
+stmt            → simple_stmt NEWLINE
+simple_stmt     → assignment_stmt
+                | print_stmt
+assignment_stmt → NAME EQ expr
+print_stmt      → PRINT LPAREN expr RPAREN
+expr            → term (PLUS term)*
+                | term (MINUS term)*
+term            → factor (TIMES factor)*
+factor          → PLUS factor
+                | MINUS factor
+                | INT
+                | NAME
+                | LPAREN expr RPAREN
