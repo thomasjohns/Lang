@@ -36,6 +36,12 @@ class Integer(ASTNode):
         self.value = value
 
 
+class NameCtx:
+    LOAD = "LOAD"
+    STORE = "STORE"
+
+
 class Name(ASTNode):
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, value, ctx):
+        self.value = value
+        self.ctx = ctx

@@ -31,6 +31,7 @@ typer.check()
 
 compiler = Compiler(ast)
 byte_code = compiler.compile()
+print(byte_code)
 
 interpreter = Interpreter(byte_code)
 interpreter.interpret()

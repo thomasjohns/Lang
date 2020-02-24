@@ -61,11 +61,11 @@ class Parser:
             self.err_expecting(NAME, PRINT)
 
     def parse_assignment_stmt(self):
-        name = self.token.lexeme
+        value = self.token.lexeme
         self.eat()
         self.eat_expecting(EQ)
         expr = self.parse_expr()
-        return Assign(Name(name), expr)
+        return Assign(Name(value, ctx=NameCtx.STORE), expr)
 
     def parse_print_stmt(self):
         self.eat()
@@ -108,11 +108,11 @@ class Parser:
         elif self.token.category == INT:
             value = self.token.lexeme
             self.eat()
-            return Integer(value)
+            return Integer(int(value))
         elif self.token.category == NAME:
-            name = self.token.lexeme
+            value = self.token.lexeme
             self.eat()
-            return Name(name)
+            return Name(value, ctx=NameCtx.LOAD)
         elif self.token.category == LPAREN:
             self.eat()
             expr = self.parse_expr()
