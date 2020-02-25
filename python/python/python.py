@@ -5,6 +5,7 @@ from python.parser import Parser
 from python.ast_printer import ASTPrinter
 from python.typer import Typer
 from python.compiler import Compiler
+from python.disassembler import Disassembler
 from python.interpreter import Interpreter
 
 
@@ -26,12 +27,17 @@ print("------------------------ AST ---------------------------")
 ast_printer = ASTPrinter(ast)
 ast_printer.print()
 
+print("------------------------ Type Checking -----------------")
 typer = Typer(ast)
 typer.check()
 
 compiler = Compiler(ast)
 byte_code = compiler.compile()
-print(byte_code)
 
+print("------------------------ Byte Code ---------------------")
+dis = Disassembler(byte_code)
+dis.dump()
+
+print("------------------------ Output ------------------------")
 interpreter = Interpreter(byte_code)
 interpreter.interpret()

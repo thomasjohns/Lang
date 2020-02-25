@@ -1,6 +1,6 @@
 from python.ast import NameCtx
 from python.token import *
-from python.op_codes import *
+from python.opcodes import *
 
 
 class Compiler:
@@ -35,18 +35,18 @@ class Compiler:
 
     def visit_UnaryOp(self, node):
         self.visit(node.operand)
-        if node.op == MINUS:
+        if node.op.category == MINUS:
             self.co_code.append(UNARY_NEGATIVE)
 
     def visit_BinOp(self, node):
         self.visit(node.left)
         self.visit(node.right)
-        if node.op == PLUS:
+        if node.op.category == PLUS:
             self.co_code.append(BINARY_ADD)
-        elif node.op == MINUS:
+        elif node.op.category == MINUS:
             self.co_code.append(UNARY_NEGATIVE)
             self.co_code.append(BINARY_ADD)
-        elif node.op == TIMES:
+        elif node.op.category == TIMES:
             self.co_code.append(BINARY_MULTIPLY)
 
     def visit_Integer(self, node):
