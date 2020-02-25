@@ -19,6 +19,7 @@ tokens = lexer.lex()
 print("------------------------ Tokens ------------------------")
 for token in tokens:
     print(token)
+print()
 
 parser = Parser(tokens)
 ast = parser.parse()
@@ -26,17 +27,20 @@ ast = parser.parse()
 print("------------------------ AST ---------------------------")
 ast_printer = ASTPrinter(ast)
 ast_printer.print()
+print()
 
 print("------------------------ Type Checking -----------------")
 typer = Typer(ast)
 typer.check()
+print()
 
+print("------------------------ Byte Code ---------------------")
 compiler = Compiler(ast)
 byte_code = compiler.compile()
 
-print("------------------------ Byte Code ---------------------")
 dis = Disassembler(byte_code)
 dis.dump()
+print()
 
 print("------------------------ Output ------------------------")
 interpreter = Interpreter(byte_code)
