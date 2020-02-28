@@ -1,16 +1,38 @@
 NAME = "NAME"
-INT = "INT"
 
+INDENT = "INDENT"
+
+IF = "IF"
+ELSE = "ELSE"
+WHILE = "WHILE"
+PASS = "PASS"
 PRINT = "PRINT"
+TRUE = "TRUE"
+FALSE = "FALSE"
+NONE = "NONE"
+
+INT = "INT"
+FLOAT = "FLOAT"
+STRING = "STRING"
+
+COLON = "COLON"
+COMMA = "COMMA"
 
 LPAREN = "LPAREN"
 RPAREN = "RPAREN"
 
 EQ = "EQ"
+DEQ = "DEQ"
+NEQ = "NEQ"
+LT = "LT"
+LEQ = "LEQ"
+GT = "GT"
+GEQ = "GEQ"
 
 PLUS = "PLUS"
 MINUS = "MINUS"
 TIMES = "TIMES"
+DIV = "DIV"
 
 NEWLINE = "NEWLINE"
 ERROR = "ERROR"
@@ -18,7 +40,14 @@ EOF = "EOF"
 
 
 keywords = {
+    "pass": PASS,
     "print": PRINT,
+    "if": IF,
+    "else": ELSE,
+    "while": WHILE,
+    "True": TRUE,
+    "False": FALSE,
+    "None": NONE,
 }
 
 

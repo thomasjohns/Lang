@@ -27,6 +27,10 @@ class Lexer:
                 self.line += 1
                 self.col = -1
                 self.eat()
+            elif self.cur_char == ":":
+                colon = Token(self.line, self.col, COLON, self.cur_char)
+                self.tokens.append(colon)
+                self.eat()
             elif self.cur_char == "(":
                 lparen = Token(self.line, self.col, LPAREN, self.cur_char)
                 self.tokens.append(lparen)
@@ -35,13 +39,13 @@ class Lexer:
                 rparen = Token(self.line, self.col, RPAREN, self.cur_char)
                 self.tokens.append(rparen)
                 self.eat()
-            elif self.cur_char == "=":
-                eq = Token(self.line, self.col, EQ, self.cur_char)
-                self.tokens.append(eq)
-                self.eat()
             elif self.cur_char == "*":
                 times = Token(self.line, self.col, TIMES, self.cur_char)
                 self.tokens.append(times)
+                self.eat()
+            elif self.cur_char == "/":
+                div = Token(self.line, self.col, DIV, self.cur_char)
+                self.tokens.append(div)
                 self.eat()
             elif self.cur_char == "+":
                 plus = Token(self.line, self.col, PLUS, self.cur_char)
@@ -51,6 +55,52 @@ class Lexer:
                 minus = Token(self.line, self.col, MINUS, self.cur_char)
                 self.tokens.append(minus)
                 self.eat()
+            elif self.cur_char == "=":
+                start_line = self.line
+                start_col = self.col
+                start_char = self.cur_char
+                self.eat()
+                if self.cur_char == "=":
+                    deq = Token(start_line, start_col, DEQ, start_char + self.cur_char)
+                    self.tokens.append(deq)
+                else:
+                    eq = Token(start_line, start_col, EQ, start_char)
+                    self.tokens.append(eq)
+            elif self.cur_char == "!":
+                start_line = self.line
+                start_col = self.col
+                start_char = self.cur_char
+                self.eat()
+                if self.cur_char == "=":
+                    neq = Token(start_line, start_col, NEQ, start_char + self.cur_char)
+                    self.tokens.append(neq)
+                else:
+                    error = Token(start_line, start_col, error, start_char)
+                    self.tokens.append(error)
+            elif self.cur_char == "<":
+                start_line = self.line
+                start_col = self.col
+                start_char = self.cur_char
+                self.eat()
+                if self.cur_char == "=":
+                    leq = Token(start_line, start_col, LEQ, start_char + self.cur_char)
+                    self.tokens.append(geq)
+                else:
+                    lt = Token(start_line, start_col, LT, start_char)
+                    self.tokens.append(lt)
+            elif self.cur_char == ">":
+                start_line = self.line
+                start_col = self.col
+                start_char = self.cur_char
+                self.eat()
+                if self.cur_char == "=":
+                    geq = Token(start_line, start_col, GEQ, start_char + self.cur_char)
+                    self.tokens.append(geq)
+                else:
+                    gt = Token(start_line, start_col, GT, start_char)
+                    self.tokens.append(gt)
+            elif self.cur_char in {'"', "'"}:
+                self.eat_string(self.cur_char)
             else:
                 error = Token(self.line, self.col, ERROR, self.cur_char)
                 self.tokens.append(error)
@@ -59,8 +109,23 @@ class Lexer:
         self.tokens.append(eof)
         return self.tokens
 
+    # TODO comments
+
     def eat_spaces(self):
         # TODO: handle python ident
+        self.eat()
+
+    def eat_string(self, start_char):
+        # TODO: handle string with escapes
+        start_line = self.line
+        start_col = self.col
+        literal = ""
+        self.eat()
+        while self.cur_char is not None and self.cur_char != start_char:
+            literal += self.cur_char
+            self.eat()
+        string = Token(start_line, start_col, STRING, literal)
+        self.tokens.append(string)
         self.eat()
 
     def eat_identifier(self):
