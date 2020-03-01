@@ -1,6 +1,7 @@
 NAME = "NAME"
 
 INDENT = "INDENT"
+DEDENT = "DEDENT"
 
 IF = "IF"
 ELSE = "ELSE"
@@ -10,6 +11,8 @@ PRINT = "PRINT"
 TRUE = "TRUE"
 FALSE = "FALSE"
 NONE = "NONE"
+DEF = "DEF"
+CLASS = "CLASS"
 
 INT = "INT"
 FLOAT = "FLOAT"
@@ -22,7 +25,7 @@ LPAREN = "LPAREN"
 RPAREN = "RPAREN"
 
 EQ = "EQ"
-DEQ = "DEQ"
+EEQ = "EEQ"
 NEQ = "NEQ"
 LT = "LT"
 LEQ = "LEQ"
@@ -48,6 +51,8 @@ keywords = {
     "True": TRUE,
     "False": FALSE,
     "None": NONE,
+    "def": DEF,
+    "class": CLASS,
 }
 
 

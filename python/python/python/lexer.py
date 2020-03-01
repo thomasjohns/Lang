@@ -1,6 +1,22 @@
 from python.token import *
 
 
+class IndentStack:
+    def __init__(self):
+        self.indents = [0]
+
+    def peek(self):
+        return self.indents[-1]
+
+    def pop(self):
+        if len(self.indents) == 1:
+            raise IndentationError("Can not dedent from no indent.")
+        return self.indents.pop()
+
+    def push(self, num_spaces):
+        self.indents.append(num_spaces)
+
+
 class Lexer:
     def __init__(self, src):
         self.src = src
@@ -10,13 +26,18 @@ class Lexer:
         self.line = 0
         self.col = -1
 
+        self.indent_stack = IndentStack()
+
         self.cur_char = None
 
     def lex(self):
         self.eat()
         while self.cur_char is not None:
+            if self.col == 0:
+                self.eat_indentation()
+
             if self.cur_char in " \t":
-                self.eat_spaces()
+                self.eat()
             elif self.cur_char.isalpha() or self.cur_char == "_":
                 self.eat_identifier()
             elif self.cur_char.isdigit():
@@ -61,8 +82,8 @@ class Lexer:
                 start_char = self.cur_char
                 self.eat()
                 if self.cur_char == "=":
-                    deq = Token(start_line, start_col, DEQ, start_char + self.cur_char)
-                    self.tokens.append(deq)
+                    eeq = Token(start_line, start_col, EEQ, start_char + self.cur_char)
+                    self.tokens.append(eeq)
                 else:
                     eq = Token(start_line, start_col, EQ, start_char)
                     self.tokens.append(eq)
@@ -99,7 +120,7 @@ class Lexer:
                 else:
                     gt = Token(start_line, start_col, GT, start_char)
                     self.tokens.append(gt)
-            elif self.cur_char in {'"', "'"}:
+            elif self.cur_char in "'\"":
                 self.eat_string(self.cur_char)
             else:
                 error = Token(self.line, self.col, ERROR, self.cur_char)
@@ -110,10 +131,26 @@ class Lexer:
         return self.tokens
 
     # TODO comments
+    # TODO floats
 
-    def eat_spaces(self):
-        # TODO: handle python ident
-        self.eat()
+    def eat_indentation(self):
+        num_spaces = 0
+        while self.cur_char in " \t":
+            num_spaces += 1
+            self.eat()
+        if num_spaces > self.indent_stack.peek():
+            self.indent_stack.push(num_spaces)
+            indent = Token(self.line, 0, INDENT, None)
+            self.tokens.append(indent)
+        elif num_spaces < self.indent_stack.peek():
+            while self.indent_stack.peek() != num_spaces:
+                try:
+                    self.indent_stack.pop()
+                except IndentationError:
+                    print(f"Indentation error on line: {self.line}")
+                    exit()
+                dedent = Token(self.line, 0, DEDENT, None)
+                self.tokens.append(dedent)
 
     def eat_string(self, start_char):
         # TODO: handle string with escapes
