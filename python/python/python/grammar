@@ -1,14 +1,24 @@
 program         → stmt* EOF
 stmt            → simple_stmt NEWLINE
+                | compound_stmt
 simple_stmt     → assignment_stmt
                 | print_stmt
-assignment_stmt → NAME EQ expr
-print_stmt      → PRINT LPAREN expr RPAREN
-expr            → term (PLUS term)*
-                | term (MINUS term)*
-term            → factor (TIMES factor)*
+                | pass_stmt
+compound_stmt   → while_stmt
+                | if_stmt
+assignment_stmt → NAME EQ rel_expr
+print_stmt      → PRINT LPAREN [rel_expr (COMMA rel_expr)* [COMMA]] RPAREN
+pass_stmt       → PASS
+rel_expr        → expr [(EEQ | NEQ | LT | LEQ | GT | GEQ) expr]
+expr            → term ((PLUS | MINUS) term)*
+term            → factor ((TIMES | DIV) factor)*
 factor          → PLUS factor
                 | MINUS factor
                 | INT
+                | FLOAT
                 | NAME
-                | LPAREN expr RPAREN
+                | LPAREN rel_expr RPAREN
+                | STRING
+                | TRUE
+                | FALSE
+                | NONE

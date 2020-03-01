@@ -13,6 +13,7 @@ FALSE = "FALSE"
 NONE = "NONE"
 DEF = "DEF"
 CLASS = "CLASS"
+NOT = "NOT"
 
 INT = "INT"
 FLOAT = "FLOAT"
@@ -53,6 +54,7 @@ keywords = {
     "None": NONE,
     "def": DEF,
     "class": CLASS,
+    "not": NOT,
 }
 
 
