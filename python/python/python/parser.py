@@ -51,7 +51,10 @@ class Parser:
         return program
 
     def parse_stmt(self):
-        stmt = self.parse_simple_stmt()
+        if self.token.category in {NAME, PRINT, PASS}:
+            stmt = self.parse_simple_stmt()
+        else:
+            stmt = self.parse_compound_stmt()
         self.eat_expecting(NEWLINE)
         return stmt
 
@@ -60,6 +63,8 @@ class Parser:
             return self.parse_assignment_stmt()
         elif self.token.category == PRINT:
             return self.parse_print_stmt()
+        elif self.token.category == PASS:
+            return self.parse_pass_stmt()
         else:
             self.err_expecting(NAME, PRINT)
 
@@ -67,15 +72,37 @@ class Parser:
         value = self.token.lexeme
         self.eat()
         self.eat_expecting(EQ)
-        expr = self.parse_expr()
-        return Assign(Name(value, ctx=NameCtx.STORE), expr)
+        rel_expr = self.parse_rel_expr()
+        return Assign(Name(value, ctx=NameCtx.STORE), rel_expr)
 
     def parse_print_stmt(self):
         self.eat()
         self.eat_expecting(LPAREN)
-        expr = self.parse_expr()
+        rel_expr = self.parse_rel_expr()
+        # TODO: multiple rel_expr's
+        # TODO: possible trailing COMMA
         self.eat_expecting(RPAREN)
-        return Print(expr)
+        return Print(rel_expr)
+
+    def parse_pass_stmt(self):
+        # TODO
+        pass
+
+    def parse_compound_stmt(self):
+        # TODO
+        pass
+
+    def parse_while_stmt(self):
+        # TODO
+        pass
+
+    def parse_if_stmt(self):
+        # TODO
+        pass
+
+    def parse_rel_expr(self):
+        # TODO
+        return self.parse_expr()
 
     def parse_expr(self):
         node = self.parse_term()
@@ -118,8 +145,8 @@ class Parser:
             return Name(id, ctx=NameCtx.LOAD)
         elif self.token.category == LPAREN:
             self.eat()
-            expr = self.parse_expr()
+            rel_expr = self.parse_rel_expr()
             self.eat_expecting(RPAREN)
-            return expr
+            return rel_expr
         else:
             raise SyntaxError("Expecting factor")
