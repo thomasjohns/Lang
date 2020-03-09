@@ -39,7 +39,7 @@ class ASTPrinter:
         node_visit = f"visit_{node_type}"
         getattr(self, node_visit)(node)
 
-    def visit_Program(self, node):
+    def visit_Module(self, node):
         self.writer.writeln(f"{node.__class__.__name__}(")
         self.writer.indent()
         self.writer.writeln("stmts=[")

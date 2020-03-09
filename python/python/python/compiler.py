@@ -20,7 +20,7 @@ class Compiler:
         node_visit = f"visit_{node_type}"
         getattr(self, node_visit)(node)
 
-    def visit_Program(self, node):
+    def visit_Module(self, node):
         for stmt in node.stmts:
             self.visit(stmt)
 

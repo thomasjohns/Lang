@@ -47,7 +47,7 @@ class Parser:
             stmts.append(stmt)
         if self.token.category != EOF:
             self.err_expecting(EOF)
-        program = Program(stmts)
+        program = Module(stmts)
         return program
 
     def parse_stmt(self):

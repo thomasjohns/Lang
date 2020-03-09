@@ -2,7 +2,7 @@ class ASTNode:
     pass
 
 
-class Program(ASTNode):
+class Module(ASTNode):
     def __init__(self, stmts):
         self.stmts = stmts
 
