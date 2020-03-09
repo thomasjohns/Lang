@@ -32,6 +32,9 @@ class Parser:
             f"at line={self.token.line} col={self.token.col}"
         )
 
+    def at_start_of_stmt(self):
+        return self.token.category in {NAME, PRINT, PASS, WHILE, IF}
+
     def parse(self):
         self.eat()
         ast = self.parse_program()
@@ -39,7 +42,7 @@ class Parser:
 
     def parse_program(self):
         stmts = []
-        while self.token.category in {NAME, PRINT}:
+        while self.at_start_of_stmt():
             stmt = self.parse_stmt()
             stmts.append(stmt)
         if self.token.category != EOF:
