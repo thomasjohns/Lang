@@ -18,6 +18,24 @@ class Print(ASTNode):
         self.expr = expr
 
 
+class Pass(ASTNode):
+    pass
+
+
+class If(ASTNode):
+    def __init__(self, test, body, or_else):
+        self.test = test
+        self.body = body
+        self.or_else = or_else
+
+
+class While(ASTNode):
+    def __init__(self, test, body, or_else):
+        self.test = test
+        self.body = body
+        self.or_else = or_else
+
+
 class UnaryOp(ASTNode):
     def __init__(self, op, operand):
         self.op = op
@@ -43,14 +61,6 @@ class Compare(ASTNode):
         self.left = left
         self.op = op
         self.comparators = comparators
-
-
-class And(ASTNode):
-    pass
-
-
-class Or(ASTNode):
-    pass
 
 
 class Constant(ASTNode):
