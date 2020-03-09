@@ -108,7 +108,7 @@ class Parser:
         elif self.token.category == INT:
             value = self.token.lexeme
             self.eat()
-            return Integer(int(value))
+            return Constant(int(value))
         elif self.token.category == NAME:
             value = self.token.lexeme
             self.eat()

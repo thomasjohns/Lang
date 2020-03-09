@@ -14,6 +14,8 @@ NONE = "NONE"
 DEF = "DEF"
 CLASS = "CLASS"
 NOT = "NOT"
+AND = "AND"
+OR = "OR"
 
 INT = "INT"
 FLOAT = "FLOAT"

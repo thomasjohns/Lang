@@ -97,7 +97,7 @@ class ASTPrinter:
         self.writer.dedent()
         self.writer.write(")")
 
-    def visit_Integer(self, node):
+    def visit_Constant(self, node):
         self.writer.write(f"{node.__class__.__name__}(value={node.value})")
 
     def visit_Name(self, node):

@@ -49,7 +49,7 @@ class Compiler:
         elif node.op.category == TIMES:
             self.co_code.append(BINARY_MULTIPLY)
 
-    def visit_Integer(self, node):
+    def visit_Constant(self, node):
         self.co_code.append(LOAD_CONST)
         index = len(self.co_consts)
         self.co_consts.append(node.value)

@@ -31,9 +31,36 @@ class BinOp(ASTNode):
         self.right = right
 
 
-class Integer(ASTNode):
+class BoolOp(ASTNode):
+    """`a or b or c` has `op='or'` and `values=[a, b, c]`"""
+    def __init__(self, op, values):
+        self.op = op
+        self.values = values
+
+
+class Compare(ASTNode):
+    def __init__(self, left, op, comparators):
+        self.left = left
+        self.op = op
+        self.comparators = comparators
+
+
+class And(ASTNode):
+    pass
+
+
+class Or(ASTNode):
+    pass
+
+
+class Constant(ASTNode):
     def __init__(self, value):
         self.value = value
+
+
+class Str(ASTNode):
+    def __init__(self, s):
+        self.s = s
 
 
 class NameCtx:

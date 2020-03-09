@@ -9,6 +9,9 @@ compound_stmt   → while_stmt
 assignment_stmt → NAME EQ rel_expr
 print_stmt      → PRINT LPAREN [rel_expr (COMMA rel_expr)* [COMMA]] RPAREN
 pass_stmt       → PASS
+while_stmt      → WHILE rel_expr COLON: code_block
+if_stmt         → IF rel_expr COLON code_block [ELSE code_block]
+code_block      → NEWLINE IDENT stmt+ DEDENT
 rel_expr        → expr [(EEQ | NEQ | LT | LEQ | GT | GEQ) expr]
 expr            → term ((PLUS | MINUS) term)*
 term            → factor ((TIMES | DIV) factor)*
