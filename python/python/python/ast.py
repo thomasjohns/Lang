@@ -69,6 +69,6 @@ class NameCtx:
 
 
 class Name(ASTNode):
-    def __init__(self, value, ctx):
-        self.value = value
+    def __init__(self, id, ctx):
+        self.id = id
         self.ctx = ctx

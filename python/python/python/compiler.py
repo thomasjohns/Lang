@@ -61,9 +61,9 @@ class Compiler:
         elif node.ctx == NameCtx.STORE:
             self.co_code.append(STORE_NAME)
 
-        if node.value in self.co_names:
-            index = self.co_names.index(node.value)
+        if node.id in self.co_names:
+            index = self.co_names.index(node.id)
         else:
             index = len(self.co_names)
-            self.co_names.append(node.value)
+            self.co_names.append(node.id)
         self.co_code.append(index)

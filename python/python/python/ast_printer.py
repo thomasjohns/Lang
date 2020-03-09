@@ -102,5 +102,5 @@ class ASTPrinter:
 
     def visit_Name(self, node):
         self.writer.write(
-            f"{node.__class__.__name__}(value={node.value}, ctx={node.ctx})"
+            f"{node.__class__.__name__}(id={node.id}, ctx={node.ctx})"
         )

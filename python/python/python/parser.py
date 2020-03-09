@@ -110,9 +110,9 @@ class Parser:
             self.eat()
             return Constant(int(value))
         elif self.token.category == NAME:
-            value = self.token.lexeme
+            id = self.token.lexeme
             self.eat()
-            return Name(value, ctx=NameCtx.LOAD)
+            return Name(id, ctx=NameCtx.LOAD)
         elif self.token.category == LPAREN:
             self.eat()
             expr = self.parse_expr()
