@@ -1,6 +1,6 @@
 program         → stmt* EOF
-stmt            → simple_stmt NEWLINE
-                | compound_stmt
+stmt            → simple_stmt NEWLINE NEWLINE*
+                | compound_stmt NEWLINE*
 simple_stmt     → assignment_stmt
                 | print_stmt
                 | pass_stmt

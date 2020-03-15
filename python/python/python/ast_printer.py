@@ -74,6 +74,18 @@ class ASTPrinter:
         self.writer.dedent()
         self.writer.write(")")
 
+    def visit_Pass(self, node):
+        # TODO
+        pass
+
+    def visit_If(self, node):
+        # TODO
+        pass
+
+    def visit_While(self, node):
+        # TODO
+        pass
+
     def visit_UnaryOp(self, node):
         self.writer.writeln(f"{node.__class__.__name__}(")
         self.writer.indent()
@@ -96,6 +108,14 @@ class ASTPrinter:
         self.writer.writeln(",")
         self.writer.dedent()
         self.writer.write(")")
+
+    def visit_BoolOp(self, node):
+        # TODO
+        pass
+
+    def visit_Compare(self, node):
+        # TODO
+        pass
 
     def visit_Constant(self, node):
         self.writer.write(f"{node.__class__.__name__}(value={node.value})")

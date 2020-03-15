@@ -56,6 +56,8 @@ class Parser:
             self.eat_expecting(NEWLINE)
         else:
             stmt = self.parse_compound_stmt()
+        while self.token.category == NEWLINE:
+            self.eat()
         return stmt
 
     def parse_simple_stmt(self):
@@ -89,9 +91,9 @@ class Parser:
 
     def parse_compound_stmt(self):
         if self.token.category == IF:
-            self.parse_if_stmt()
+            return self.parse_if_stmt()
         elif self.token.category == WHILE:
-            self.parse_while_stmt()
+            return self.parse_while_stmt()
         else:
             self.err_expecting(IF, WHILE)
 
