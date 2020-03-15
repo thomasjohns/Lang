@@ -171,7 +171,7 @@ class Lexer:
         while self.cur_char is not None and self.cur_char != start_char:
             literal += self.cur_char
             self.eat()
-        string = Token(start_line, start_col, STRING, literal)
+        string = Token(start_line, start_col, STR, literal)
         self.tokens.append(string)
         self.eat()
 

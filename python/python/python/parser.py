@@ -167,11 +167,11 @@ class Parser:
         elif self.token.category == INT:
             value = self.token.lexeme
             self.eat()
-            return Constant(int(value))
+            return Constant(int(value), kind=ConstantKind.INT)
         elif self.token.category == FLOAT:
             value = self.token.lexeme
             self.eat()
-            return Constant(float(value))
+            return Constant(float(value), kind=ConstantKind.FLOAT)
         elif self.token.category == NAME:
             id = self.token.lexeme
             self.eat()
@@ -181,9 +181,21 @@ class Parser:
             rel_expr = self.parse_rel_expr()
             self.eat_expecting(RPAREN)
             return rel_expr
-        elif self.token.category in {STRING, TRUE, FALSE, NONE}:
+        elif self.token.category == TRUE:
             token = self.token
             self.eat()
-            return Constant(value=self.token.lexeme)
+            return Constant(value=token.lexeme, kind=ConstantKind.TRUE)
+        elif self.token.category == FALSE:
+            token = self.token
+            self.eat()
+            return Constant(value=token.lexeme, kind=ConstantKind.FALSE)
+        elif self.token.category == NONE:
+            token = self.token
+            self.eat()
+            return Constant(value=token.lexeme, kind=ConstantKind.NONE)
+        elif self.token.category == STR:
+            token = self.token
+            self.eat()
+            return Constant(value=token.lexeme, kind=ConstantKind.STR)
         else:
             raise SyntaxError("Expecting factor")

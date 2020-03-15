@@ -19,7 +19,7 @@ OR = "OR"
 
 INT = "INT"
 FLOAT = "FLOAT"
-STRING = "STRING"
+STR = "STR"
 
 COLON = "COLON"
 COMMA = "COMMA"

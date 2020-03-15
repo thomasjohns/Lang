@@ -12,6 +12,8 @@ from python.interpreter import Interpreter
 with open(sys.argv[1], "r") as fp:
     src = fp.read()
 
+print("------------------------ Src ---------------------------")
+print(src)
 
 lexer = Lexer(src)
 tokens = lexer.lex()

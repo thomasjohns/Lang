@@ -62,9 +62,19 @@ class Compare(ASTNode):
         self.comparators = comparators
 
 
+class ConstantKind:
+    NONE = "None"
+    STR = "str"
+    INT = "int"
+    FLOAT = "float"
+    TRUE = "True"
+    FALSE = "False"
+
+
 class Constant(ASTNode):
-    def __init__(self, value):
+    def __init__(self, value, kind):
         self.value = value
+        self.kind = kind
 
 
 class NameCtx:

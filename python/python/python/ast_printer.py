@@ -1,3 +1,6 @@
+from python.ast import *
+
+
 class LineWriter:
     def __init__(self, indent_size):
         self.indent_size = indent_size
@@ -75,16 +78,50 @@ class ASTPrinter:
         self.writer.write(")")
 
     def visit_Pass(self, node):
-        # TODO
-        pass
+        self.writer.write(f"{node.__class__.__name__}")
 
     def visit_If(self, node):
-        # TODO
-        pass
+        self.writer.writeln(f"{node.__class__.__name__}(")
+        self.writer.indent()
+        self.writer.write("test=")
+        self.visit(node.test)
+        self.writer.writeln(",")
+        self.writer.writeln("body=[")
+        self.writer.indent()
+        for stmt in node.body:
+            self.visit(stmt)
+            self.writer.writeln(",")
+        self.writer.dedent()
+        self.writer.writeln("],")
+        self.writer.write("or_else=")
+        if node.or_else is None:
+            self.writer.writeln("None,")
+        else:
+            self.writer.writeln("[")
+            self.writer.indent()
+            for stmt in node.or_else:
+                self.visit(stmt)
+                self.writer.writeln(",")
+            self.writer.dedent()
+            self.writer.writeln("],")
+        self.writer.dedent()
+        self.writer.write(")")
 
     def visit_While(self, node):
-        # TODO
-        pass
+        self.writer.writeln(f"{node.__class__.__name__}(")
+        self.writer.indent()
+        self.writer.write("test=")
+        self.visit(node.test)
+        self.writer.writeln(",")
+        self.writer.writeln("body=[")
+        self.writer.indent()
+        for stmt in node.body:
+            self.visit(stmt)
+            self.writer.writeln(",")
+        self.writer.dedent()
+        self.writer.writeln("],")
+        self.writer.dedent()
+        self.writer.write(")")
 
     def visit_UnaryOp(self, node):
         self.writer.writeln(f"{node.__class__.__name__}(")
@@ -110,15 +147,50 @@ class ASTPrinter:
         self.writer.write(")")
 
     def visit_BoolOp(self, node):
-        # TODO
-        pass
+        self.writer.writeln(f"{node.__class__.__name__}(")
+        self.writer.indent()
+        self.writer.writeln(f"op='{node.op.lexeme}',")
+        self.writer.writeln("values=[")
+        self.writer.indent()
+        for value in node.values:
+            self.visit(value)
+            self.writer.writeln(",")
+        self.dedent()
+        self.writer.writeln("],")
+        self.writer.dedent()
+        self.writer.write(")")
 
     def visit_Compare(self, node):
-        # TODO
-        pass
+        self.writer.writeln(f"{node.__class__.__name__}(")
+        self.writer.indent()
+        self.writer.write("left=")
+        self.visit(node.left)
+        self.writer.writeln(",")
+        self.writer.writeln(f"op='{node.op.lexeme}',")
+        self.writer.writeln("comparators=[")
+        self.writer.indent()
+        for comparator in node.comparators:
+            self.visit(comparator)
+            self.writer.writeln(",")
+        self.writer.dedent()
+        self.writer.writeln("],")
+        self.writer.dedent()
+        self.writer.write(")")
 
     def visit_Constant(self, node):
-        self.writer.write(f"{node.__class__.__name__}(value={node.value})")
+        self.writer.writeln(f"{node.__class__.__name__}(")
+        self.writer.indent()
+        self.writer.write("value=")
+        if node.kind == ConstantKind.STR:
+            self.writer.write("'")
+            self.writer.write(node.value)
+            self.writer.write("'")
+        else:
+            self.writer.write(node.value)
+        self.writer.writeln(",")
+        self.writer.writeln(f"kind={node.kind},")
+        self.writer.dedent()
+        self.writer.writeln("),")
 
     def visit_Name(self, node):
         self.writer.write(
