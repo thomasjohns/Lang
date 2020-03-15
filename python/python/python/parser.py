@@ -15,11 +15,11 @@ class Parser:
             raise RuntimeError("Unexpected end of file")
         self.token = self.tokens[self.pos]
 
-    def eat_expecting(self, category):
-        if self.token.category == category:
+    def eat_expecting(self, *categories):
+        if self.token.category in {*categories}:
             self.eat()
         else:
-            self.err_expecting(category)
+            self.err_expecting(*categories)
 
     def err_expecting(self, *categories):
         if len(categories) == 1:
@@ -53,9 +53,9 @@ class Parser:
     def parse_stmt(self):
         if self.token.category in {NAME, PRINT, PASS}:
             stmt = self.parse_simple_stmt()
+            self.eat_expecting(NEWLINE)
         else:
             stmt = self.parse_compound_stmt()
-        self.eat_expecting(NEWLINE)
         return stmt
 
     def parse_simple_stmt(self):
@@ -66,7 +66,7 @@ class Parser:
         elif self.token.category == PASS:
             return self.parse_pass_stmt()
         else:
-            self.err_expecting(NAME, PRINT)
+            self.err_expecting(NAME, PRINT, PASS)
 
     def parse_assignment_stmt(self):
         value = self.token.lexeme
@@ -79,30 +79,62 @@ class Parser:
         self.eat()
         self.eat_expecting(LPAREN)
         rel_expr = self.parse_rel_expr()
-        # TODO: multiple rel_expr's
-        # TODO: possible trailing COMMA
+        # TODO: handle multiple rel_expr's and trailing commas in print
         self.eat_expecting(RPAREN)
         return Print(rel_expr)
 
     def parse_pass_stmt(self):
-        # TODO
-        pass
+        self.eat_expecting(PASS)
+        return Pass()
 
     def parse_compound_stmt(self):
-        # TODO
-        pass
-
-    def parse_while_stmt(self):
-        # TODO
-        pass
+        if self.token.category == IF:
+            self.parse_if_stmt()
+        elif self.token.category == WHILE:
+            self.parse_while_stmt()
+        else:
+            self.err_expecting(IF, WHILE)
 
     def parse_if_stmt(self):
-        # TODO
-        pass
+        self.eat_expecting(IF)
+        test = self.parse_rel_expr()
+        self.eat_expecting(COLON)
+        body = self.parse_code_block()
+        if self.token.category == ELSE:
+            self.eat()
+            self.eat_expecting(COLON)
+            or_else = self.parse_code_block()
+        else:
+            or_else = None
+        return If(test, body, or_else)
+
+    def parse_while_stmt(self):
+        self.eat_expecting(WHILE)
+        test = self.parse_rel_expr()
+        self.eat_expecting(COLON)
+        body = self.parse_code_block()
+        return While(test, body)
+
+    def parse_code_block(self):
+        self.eat_expecting(NEWLINE)
+        self.eat_expecting(INDENT)
+        stmts = []
+        while self.at_start_of_stmt():
+            stmt = self.parse_stmt()
+            stmts.append(stmt)
+        self.eat_expecting(DEDENT)
+        return stmts
 
     def parse_rel_expr(self):
-        # TODO
-        return self.parse_expr()
+        expr = self.parse_expr()
+        if self.token.category in {EEQ, NEQ, LT, LEQ, GT, GEQ}:
+            op_token = self.token
+            self.eat()
+            # TODO: handle multiple comparaters (possibly turn to while)
+            comparator = self.parse_expr()
+            return Compare(left=expr, op=op_token, comparators=[comparator])
+        else:
+            return expr
 
     def parse_expr(self):
         node = self.parse_term()
@@ -116,7 +148,7 @@ class Parser:
 
     def parse_term(self):
         node = self.parse_factor()
-        while self.token.category == TIMES:
+        while self.token.category in {TIMES, DIV}:
             times_token = self.token
             self.eat()
             left_node = node
@@ -125,20 +157,19 @@ class Parser:
         return node
 
     def parse_factor(self):
-        if self.token.category == PLUS:
-            plus_token = self.token
+        if self.token.category in {PLUS, MINUS}:
+            token = self.token
             self.eat()
             operand = self.parse_factor()
-            return UnaryOp(op=plus_token, operand=operand)
-        elif self.token.category == MINUS:
-            minus_token = self.token
-            self.eat()
-            operand = self.parse_factor()
-            return UnaryOp(op=minus_token, operand=operand)
+            return UnaryOp(op=token, operand=operand)
         elif self.token.category == INT:
             value = self.token.lexeme
             self.eat()
             return Constant(int(value))
+        elif self.token.category == FLOAT:
+            value = self.token.lexeme
+            self.eat()
+            return Constant(float(value))
         elif self.token.category == NAME:
             id = self.token.lexeme
             self.eat()
@@ -148,5 +179,9 @@ class Parser:
             rel_expr = self.parse_rel_expr()
             self.eat_expecting(RPAREN)
             return rel_expr
+        elif self.token.category in {STRING, TRUE, FALSE, NONE}:
+            token = self.token
+            self.eat()
+            return Constant(value=self.token.lexeme)
         else:
             raise SyntaxError("Expecting factor")

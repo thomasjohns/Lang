@@ -30,10 +30,9 @@ class If(ASTNode):
 
 
 class While(ASTNode):
-    def __init__(self, test, body, or_else):
+    def __init__(self, test, body):
         self.test = test
         self.body = body
-        self.or_else = or_else
 
 
 class UnaryOp(ASTNode):
@@ -66,11 +65,6 @@ class Compare(ASTNode):
 class Constant(ASTNode):
     def __init__(self, value):
         self.value = value
-
-
-class Str(ASTNode):
-    def __init__(self, s):
-        self.s = s
 
 
 class NameCtx:

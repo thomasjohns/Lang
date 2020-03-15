@@ -84,6 +84,7 @@ class Lexer:
                 if self.cur_char == "=":
                     eeq = Token(start_line, start_col, EEQ, start_char + self.cur_char)
                     self.tokens.append(eeq)
+                    self.eat()
                 else:
                     eq = Token(start_line, start_col, EQ, start_char)
                     self.tokens.append(eq)
@@ -95,6 +96,7 @@ class Lexer:
                 if self.cur_char == "=":
                     neq = Token(start_line, start_col, NEQ, start_char + self.cur_char)
                     self.tokens.append(neq)
+                    self.eat()
                 else:
                     error = Token(start_line, start_col, error, start_char)
                     self.tokens.append(error)
@@ -106,6 +108,7 @@ class Lexer:
                 if self.cur_char == "=":
                     leq = Token(start_line, start_col, LEQ, start_char + self.cur_char)
                     self.tokens.append(geq)
+                    self.eat()
                 else:
                     lt = Token(start_line, start_col, LT, start_char)
                     self.tokens.append(lt)
@@ -117,6 +120,7 @@ class Lexer:
                 if self.cur_char == "=":
                     geq = Token(start_line, start_col, GEQ, start_char + self.cur_char)
                     self.tokens.append(geq)
+                    self.eat()
                 else:
                     gt = Token(start_line, start_col, GT, start_char)
                     self.tokens.append(gt)
@@ -126,6 +130,12 @@ class Lexer:
                 error = Token(self.line, self.col, ERROR, self.cur_char)
                 self.tokens.append(error)
                 self.eat()
+
+        while self.indent_stack.peek() > 0:
+            self.indent_stack.pop()
+            dedent = Token(self.line, self.col, DEDENT, None)
+            self.tokens.append(dedent)
+
         eof = Token(self.line, self.col, EOF, "")
         self.tokens.append(eof)
         return self.tokens
